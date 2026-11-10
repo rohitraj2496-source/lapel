@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lapel Founding Pilot</title>
+<meta name="description" content="Lapel is a smart AI pin for CEOs and senior leaders. It sees and hears your in-person meetings and files decisions, owners and follow-ups on your calendar. Founding pilot open to 10 leaders in Delhi NCR.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: graphite and bone only, one amber signal. Dark for the object and the invitation, light for the detail. One sans family throughout. */
+:root{
+  color-scheme: dark;
+  --graphite:#15161A;
+  --graphite-2:#202227;
+  --steel:#90949D;
+  --bone:#ECE6DA;
+  --paper:#F8F4EC;
+  --oxblood:#0D0E11;
+  --wine:#5E626B;
+  --amber:#FFB04A;
+  --ink:#111215;
+  --display:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --gutter:clamp(20px,5vw,72px);
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--graphite);color:var(--bone);font-family:var(--body);font-weight:400;font-size:17px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,svg{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px var(--gutter);mix-blend-mode:difference;color:#fff;pointer-events:none}
+.bar > *{pointer-events:auto}
+.mark{font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.mark i{width:9px;height:14px;border-radius:5px;border:1.5px solid currentColor;display:block}
+.bar .ghost{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;border:1px solid currentColor;border-radius:99px;padding:10px 18px;transition:background .3s,color .3s}
+.bar .ghost:hover{background:#fff;color:#000}
+
+/* ---------- fold rail ---------- */
+.rail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:14px;mix-blend-mode:difference;color:#fff}
+.rail a{display:flex;align-items:center;justify-content:flex-end;gap:10px;text-decoration:none;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;opacity:.45;transition:opacity .3s}
+.rail a span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .4s var(--ease)}
+.rail a::after{content:"";width:18px;height:1px;background:currentColor;transition:width .4s var(--ease)}
+.rail a.on,.rail a:hover{opacity:1}
+.rail a:hover span{max-width:120px}
+.rail a.on::after{width:36px}
+@media (max-width:900px){.rail{display:none}}
+
+/* ---------- shared ---------- */
+.fold{position:relative;padding:clamp(96px,13vh,150px) var(--gutter) clamp(64px,9vh,110px);min-height:clamp(640px,96vh,940px);display:flex;align-items:center}
+.wrap{width:100%;max-width:1240px;margin:0 auto}
+h1,h2{font-family:var(--display);font-weight:500;line-height:1.02;letter-spacing:-.038em;text-wrap:balance}
+h1 em,h2 em{font-style:normal;font-weight:500;color:var(--steel)}
+#brief h2 em,#qa h2 em{color:rgba(17,18,21,.4)}
+.btn{display:inline-flex;align-items:center;gap:14px;font-family:var(--body);font-weight:500;font-size:16px;text-decoration:none;border:0;cursor:pointer;border-radius:99px;padding:17px 26px 17px 22px;background:var(--bone);color:var(--ink);transition:transform .35s var(--ease),box-shadow .35s}
+.btn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 0 rgba(255,176,74,.6);transition:box-shadow .4s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}
+.btn:hover::before{box-shadow:0 0 0 7px rgba(255,176,74,.22)}
+.link{font-size:16px;text-underline-offset:6px;text-decoration-thickness:1px;opacity:.8;transition:opacity .2s}
+.link:hover{opacity:1}
+
+/* ================= FOLD 1 : THE PIN ================= */
+#pin{background:
+  radial-gradient(60% 55% at 72% 46%, rgba(120,126,140,.20), transparent 70%),
+  repeating-linear-gradient(118deg, rgba(255,255,255,.022) 0 1px, transparent 1px 5px),
+  repeating-linear-gradient(28deg, rgba(0,0,0,.16) 0 1px, transparent 1px 4px),
+  var(--graphite)}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,64px);align-items:center}
+.eyebrow{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--steel);margin-bottom:26px}
+.eyebrow b{font-weight:400;color:var(--amber)}
+h1{font-size:clamp(44px,5.9vw,88px)}
+h1 .line{display:block;overflow:hidden;padding-bottom:.08em}
+h1 .line > span{display:block;animation:rise 1.1s var(--ease) both}
+h1 .line:nth-child(2) > span{animation-delay:.12s}
+.lede{max-width:33em;margin-top:28px;font-size:clamp(17px,1.35vw,20px);font-weight:300;color:rgba(236,230,218,.82);animation:fade 1s .5s both}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:36px;animation:fade 1s .65s both}
+.specs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:clamp(40px,6vh,72px);border-top:1px solid rgba(236,230,218,.16);animation:fade 1s .8s both}
+.specs div{padding:16px 14px 0 0;color:var(--steel);font-size:11px;line-height:1.7}
+.specs div b{display:block;font-weight:400;color:var(--bone)}
+
+.stage{position:relative;display:grid;place-items:center;perspective:1300px;min-height:420px}
+.float{animation:float 7s ease-in-out infinite;width:min(100%,430px)}
+.tilt{transform-style:preserve-3d;transform:rotateY(var(--ry,-14deg)) rotateX(var(--rx,7deg));transition:transform .15s linear;filter:drop-shadow(0 46px 44px rgba(0,0,0,.62)) drop-shadow(0 8px 10px rgba(0,0,0,.5));animation:arrive 1.6s var(--ease) both}
+.pin-svg{width:100%;height:auto;overflow:visible}
+.dim{stroke:rgba(236,230,218,.4);stroke-width:1;fill:none;stroke-dasharray:520;stroke-dashoffset:520;animation:draw 1.6s 1.1s var(--ease) forwards}
+.dim-t{font-family:var(--mono);font-size:13px;letter-spacing:.14em;fill:rgba(236,230,218,.62);animation:fade 1s 1.9s both}
+.sheen{transform:translate(var(--sx,0px),var(--sy,0px));transition:transform .2s linear}
+.led{animation:ledon 2.4s 1.4s both, pulse 2.6s 3.8s ease-in-out infinite}
+.glint{transform-origin:150px 108px;animation:glint 6s 2s ease-in-out infinite}
+.three{display:none;width:min(100%,540px);aspect-ratio:1/1.08;cursor:grab;touch-action:pan-y;position:relative;animation:fade 1.2s .2s both}
+.three:active{cursor:grabbing}
+.three canvas{width:100% !important;height:100% !important;display:block;outline:0}
+.three::after{content:"";position:absolute;left:22%;right:22%;bottom:3%;height:9%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);filter:blur(10px);z-index:-1}
+.stage.is3d .three{display:block}
+.stage.is3d #flat{display:none}
+.stage.is3d{grid-template-rows:auto auto auto;gap:4px}
+.grab,.cap{display:none;color:var(--steel);font-size:11px}
+.stage.is3d .grab{display:flex;align-items:center;gap:10px;color:var(--bone);transition:opacity .6s}
+.stage.is3d .cap{display:block}
+.grab i{width:26px;height:14px;border:1px solid currentColor;border-radius:9px;position:relative;display:block}
+.grab i::after{content:"";position:absolute;top:3px;left:4px;width:6px;height:6px;border-radius:50%;background:var(--amber);animation:nudge 2.2s ease-in-out infinite}
+.grab.used{opacity:0}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+.cue{position:absolute;left:var(--gutter);bottom:26px;display:flex;align-items:center;gap:12px;color:var(--steel)}
+.cue i{width:1px;height:34px;background:linear-gradient(var(--steel),transparent);animation:cue 2.2s ease-in-out infinite;transform-origin:top}
+
+/* ================= FOLD 2 : THE BRIEF ================= */
+#brief{background:var(--bone);color:var(--ink)}
+#brief::before{content:"";position:absolute;inset:0 0 auto 0;height:90px;background:linear-gradient(var(--graphite),transparent);opacity:.0}
+.two{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,6vw,96px);align-items:center}
+#brief h2,#qa h2{font-size:clamp(34px,4.3vw,62px)}
+#brief .sub{margin-top:22px;max-width:30em;font-weight:300;font-size:clamp(17px,1.3vw,19px);color:rgba(17,18,21,.74)}
+.steps{list-style:none;margin-top:38px;border-top:1px solid rgba(17,18,21,.16)}
+.steps li{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid rgba(17,18,21,.16);align-items:baseline}
+.steps time{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--wine)}
+.steps b{font-weight:500}
+.steps span{display:block;font-size:15px;color:rgba(17,18,21,.66)}
+
+.sheet-wrap{position:relative}
+.sheet{position:relative;background:var(--paper);border-radius:6px;padding:clamp(22px,2.6vw,36px);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 40px 70px -34px rgba(40,24,10,.45),0 2px 6px rgba(40,24,10,.12);transform:rotate(-1.2deg);overflow:hidden;font-size:15px}
+.sheet::after{content:"";position:absolute;left:0;right:0;top:-12%;height:12%;background:linear-gradient(transparent,rgba(255,176,74,.30),transparent);pointer-events:none;opacity:0}
+.sheet.play::after{animation:scan 1.9s .1s var(--ease) both}
+.sheet header{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding-bottom:14px;border-bottom:1px solid rgba(17,18,21,.14)}
+.sheet header h3{font-family:var(--display);font-weight:500;font-size:26px;line-height:1.1}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--wine);border:1px solid currentColor;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.meta{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:rgba(17,18,21,.55);margin-top:6px}
+.sheet h4{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,18,21,.5);margin:18px 0 8px}
+.sheet ol{list-style:none;counter-reset:d}
+.sheet ol li{counter-increment:d;display:grid;grid-template-columns:24px 1fr;padding:3px 0}
+.sheet ol li::before{content:counter(d);font-family:var(--display);font-style:italic;font-size:19px;line-height:1.15;color:var(--wine)}
+.owes{display:grid;gap:0}
+.owes div{display:grid;grid-template-columns:74px 1fr auto;gap:10px;padding:7px 0;border-top:1px dashed rgba(17,18,21,.16);font-variant-numeric:tabular-nums}
+.owes div:first-child{border-top:0}
+.owes b{font-weight:600}
+.owes em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--wine)}
+.split{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;align-items:start}
+.board{background:#fff;border:1px solid rgba(17,18,21,.12);border-radius:4px;padding:8px}
+.board path,.board line{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.board .curve{stroke:var(--wine);stroke-width:2.2;stroke-dasharray:260;stroke-dashoffset:0}
+.sheet.play .board .curve{animation:draw2 1.6s .9s var(--ease) both}
+.board text{font-family:var(--mono);font-size:8px;fill:rgba(17,18,21,.6)}
+.bubble{background:#E4F2DC;border-radius:10px 10px 2px 10px;padding:10px 12px;font-size:14px;line-height:1.45;min-height:5.9em;color:#16210f}
+.bubble .caret{display:inline-block;width:1px;height:1em;background:currentColor;vertical-align:-2px;margin-left:1px;animation:blink 1s steps(2) infinite}
+.ready{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,18,21,.6)}
+.ready::before{content:"";width:7px;height:7px;border-radius:50%;background:#3d8b3d}
+.rv{animation:none}
+.sheet.play .rv{animation:ink .7s var(--ease) both;animation-delay:calc(var(--i)*110ms + 250ms)}
+.fine{margin-top:16px;font-size:13px;color:rgba(17,18,21,.55)}
+.stamp{position:absolute;right:-14px;top:-30px;width:86px;height:86px;border-radius:50%;background:var(--graphite);color:var(--bone);display:grid;place-items:center;text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;line-height:1.5;text-transform:uppercase;transform:rotate(9deg);box-shadow:0 12px 24px -10px rgba(0,0,0,.5);z-index:2}
+.stamp b{display:block;font-family:var(--display);font-style:italic;font-weight:400;font-size:24px;letter-spacing:0;text-transform:none;line-height:1}
+
+.head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,80px);align-items:end}
+.head .sub{margin-top:0 !important}
+.gets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(20px,3vw,44px);margin-top:clamp(36px,6vh,64px)}
+.gets article{padding:22px 0 26px;border-top:1px solid rgba(17,18,21,.18)}
+.gets h3{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.gets h3::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);flex:none}
+.gets p{margin-top:8px;font-size:15.5px;line-height:1.55;color:rgba(17,18,21,.68);max-width:32em}
+.see{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,72px);align-items:center;margin-top:clamp(12px,3vh,28px);background:var(--graphite);color:var(--bone);border-radius:20px;padding:clamp(26px,3.6vw,52px)}
+.see .mono{color:var(--amber);margin-bottom:16px}
+.see h3{font-size:clamp(26px,2.9vw,40px);font-weight:500;letter-spacing:-.03em;line-height:1.08;text-wrap:balance}
+.see h3 em{font-style:normal;color:var(--steel)}
+.see > div > p:not(.mono){margin-top:16px;font-size:16px;color:rgba(236,230,218,.72);max-width:28em}
+.ask{margin-top:22px;display:grid;gap:8px;max-width:26em}
+.ask p{border-radius:14px;padding:12px 16px 13px;font-size:15.5px;line-height:1.4}
+.ask .mono{display:block;font-size:10px;margin:0 0 4px;color:inherit;opacity:.6}
+.ask .eg{padding:0;font-size:12.5px;color:rgba(236,230,218,.5);justify-self:end}
+.ask .q{background:rgba(236,230,218,.09);border:1px solid rgba(236,230,218,.14);justify-self:start}
+.ask .a{background:var(--bone);color:var(--ink);justify-self:end;font-weight:500}
+.see ul{list-style:none}
+.see li{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:16px;padding:15px 0;border-top:1px solid rgba(236,230,218,.16);font-size:15.5px;line-height:1.5}
+.see li:last-child{border-bottom:1px solid rgba(236,230,218,.16)}
+.see li b{font-weight:600}
+.see li span{color:rgba(236,230,218,.72)}
+@media (max-width:900px){.see{grid-template-columns:1fr}}
+@media (max-width:520px){.see li{grid-template-columns:1fr;gap:2px}}
+.flow{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:clamp(20px,4vh,40px)}
+.flow li{background:var(--paper);border-radius:14px;padding:20px 22px 22px}
+.flow time{display:block;font-size:11.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:rgba(17,18,21,.5);margin-bottom:10px}
+.flow b{display:block;font-weight:600;font-size:17px;letter-spacing:-.01em}
+.flow span{display:block;margin-top:4px;font-size:15px;color:rgba(17,18,21,.66)}
+#qa{background:var(--paper);color:var(--ink);min-height:0}
+.qa{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,96px);align-items:start}
+.qa .sub{margin-top:18px;font-size:16px;color:rgba(17,18,21,.66);max-width:24em}
+.faq details{border-top:1px solid rgba(17,18,21,.16)}
+.faq details:last-child{border-bottom:1px solid rgba(17,18,21,.16)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;font-weight:600;font-size:17.5px;letter-spacing:-.012em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:none;width:12px;height:12px;background:linear-gradient(currentColor,currentColor) center/100% 1.5px no-repeat,linear-gradient(currentColor,currentColor) center/1.5px 100% no-repeat;transition:transform .35s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 40px 22px 0;font-size:16px;line-height:1.6;color:rgba(17,18,21,.7);max-width:38em;animation:fade .45s var(--ease) both}
+@media (max-width:900px){.head,.qa{grid-template-columns:1fr}.gets{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:1fr}}
+@media (max-width:520px){.gets{grid-template-columns:1fr}}
+
+/* ================= FOLD 3 : THE PILOT ================= */
+#pilot{background:
+  radial-gradient(60% 70% at 85% 10%, rgba(120,126,140,.16), transparent 70%),
+  repeating-linear-gradient(118deg, rgba(255,255,255,.02) 0 1px, transparent 1px 5px),
+  var(--oxblood);color:var(--bone)}
+#pilot h2{font-size:clamp(34px,4.3vw,62px)}
+.seats{display:flex;gap:9px;margin:30px 0 8px;flex-wrap:wrap}
+.seats i{width:17px;height:27px;border-radius:9px;border:1px solid rgba(236,230,218,.55);position:relative;display:block}
+.seats i::after{content:"";position:absolute;left:50%;top:5px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--amber);opacity:.25;animation:seat 5s ease-in-out infinite;animation-delay:calc(var(--n)*.28s)}
+.terms{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin-top:22px;max-width:560px}
+.terms li{padding:14px 0;border-top:1px solid rgba(236,230,218,.2)}
+.terms .mono{display:block;color:rgba(236,230,218,.6);font-size:10.5px;margin-bottom:3px}
+.terms b{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.25;letter-spacing:-.01em}
+.vows{margin-top:26px;max-width:560px;font-size:15px;color:rgba(236,230,218,.8);display:grid;gap:7px}
+.vows p{display:grid;grid-template-columns:18px 1fr;gap:8px}
+.vows p::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber);margin-top:.62em}
+.vows b{color:var(--bone);font-weight:500}
+
+form{background:rgba(17,18,21,.34);border:1px solid rgba(236,230,218,.16);border-radius:18px;padding:clamp(22px,2.8vw,38px);backdrop-filter:blur(6px);display:grid;gap:16px}
+form h3{font-family:var(--display);font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-.02em}
+form p.hint{font-size:14px;color:rgba(236,230,218,.72);margin-top:-8px}
+.field{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:rgba(236,230,218,.7)}
+input,select{width:100%;font:inherit;font-size:16px;color:var(--bone);background:transparent;border:0;border-bottom:1px solid rgba(236,230,218,.35);padding:9px 0 10px;border-radius:0;transition:border-color .25s}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--bone) 50%),linear-gradient(135deg,var(--bone) 50%,transparent 50%);background-position:calc(100% - 11px) 55%,calc(100% - 6px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+select option{color:#111}
+input::placeholder{color:rgba(236,230,218,.35)}
+input:focus,select:focus{outline:0;border-bottom-color:var(--amber)}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-bottom-color:#ff8f7a}
+form .btn{justify-self:start;margin-top:6px}
+.req{color:var(--amber);font-weight:600}
+#notice{font-size:14.5px;line-height:1.5;min-height:1.5em}
+#notice.err{color:#ffb3a3}
+#notice.ok{color:var(--amber)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;margin-top:clamp(40px,7vh,80px);padding-top:18px;border-top:1px solid rgba(236,230,218,.2);color:rgba(236,230,218,.6);font-size:11px}
+
+/* ---------- motion ---------- */
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes arrive{from{opacity:0;transform:rotateY(-58deg) rotateX(16deg) scale(.86)}to{opacity:1;transform:rotateY(var(--ry,-14deg)) rotateX(var(--rx,7deg))}}
+@keyframes float{0%,100%{transform:translateY(-7px)}50%{transform:translateY(9px)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes draw2{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ledon{0%,40%{opacity:0}46%{opacity:1}52%{opacity:.2}60%,100%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes glint{0%,70%,100%{transform:rotate(0)}80%{transform:rotate(38deg)}}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+@keyframes scan{0%{top:-12%;opacity:1}100%{top:100%;opacity:1}}
+@keyframes ink{from{opacity:0;transform:translateY(8px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes blink{50%{opacity:0}}
+@keyframes seat{0%,100%{opacity:.25;box-shadow:none}12%{opacity:1;box-shadow:0 0 9px 1px rgba(255,176,74,.7)}30%{opacity:.25;box-shadow:none}}
+
+@media (max-width:900px){
+  .hero,.two{grid-template-columns:1fr}
+  .stage{order:-1;min-height:0}
+  .float{width:min(68vw,300px);margin:0 auto}
+  .specs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .specs div{padding-bottom:6px}
+  .cue{display:none}
+  .fold{min-height:0}
+}
+@media (max-width:520px){
+  .row,.split,.terms{grid-template-columns:1fr}
+  .steps li{grid-template-columns:1fr;gap:2px}
+  .bar .ghost{padding:9px 13px;font-size:10.5px}
+  .stamp{right:-6px}
+  .owes div{grid-template-columns:60px 1fr auto}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .dim{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="mark" href="#pin" aria-label="Lapel, back to top"><i></i>lapel</a>
+  <a class="ghost" href="#pilot">Apply for the pilot</a>
+</div>
+
+<nav class="rail" aria-label="Sections">
+  <a href="#pin" class="on"><span>01 The pin</span></a>
+  <a href="#brief"><span>02 What you get</span></a>
+  <a href="#qa"><span>03 Questions</span></a>
+  <a href="#pilot"><span>04 The pilot</span></a>
+</nav>
+
+<!-- ============ 01 THE PIN ============ -->
+<section class="fold" id="pin">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow mono"><b>Founding pilot</b><span>10 seats</span><span>Delhi NCR</span></p>
+      <h1 aria-label="The CEO's second memory."><span class="line"><span>The CEO&rsquo;s</span></span><span class="line"><span><em>second memory.</em></span></span></h1>
+      <p class="lede">Lapel is a smart AI pin for the person who runs the room. It sees and hears your in-person meetings, understands them, and files one page on your calendar: what was decided, who owes what, and the follow-up, ready to send.</p>
+      <div class="actions">
+        <a class="btn" href="#pilot">Apply for the pilot</a>
+        <a class="link" href="#brief">See what you get</a>
+      </div>
+      <div class="specs mono">
+        <div><b>Smart AI</b>Understands the meeting, not just records it</div>
+        <div><b>Camera and mic</b>Sees the wall, hears the room</div>
+        <div><b>Never hidden</b>A light shows when it is on</div>
+        <div><b>On your calendar</b>Every meeting filed where you look</div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="three" id="three" role="img" aria-label="The Lapel pin in graphite. Drag to turn it."></div>
+      <p class="grab mono" id="grab"><i></i>Drag to turn it</p>
+      <p class="cap mono">30 × 46 × 8 mm · Graphite</p>
+      <div class="float" id="flat" aria-hidden="true"><div class="tilt" id="tilt">
+        <svg class="pin-svg" viewBox="-110 -50 520 580" role="img">
+          <defs>
+            <linearGradient id="gFrame" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8a8e97"/><stop offset=".18" stop-color="#4b4e55"/>
+              <stop offset=".46" stop-color="#2a2c31"/><stop offset=".72" stop-color="#55585f"/>
+              <stop offset="1" stop-color="#1a1b1f"/>
+            </linearGradient>
+            <linearGradient id="gEdge" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#d9dce2" stop-opacity=".85"/><stop offset=".5" stop-color="#6d7078" stop-opacity=".2"/>
+              <stop offset="1" stop-color="#000" stop-opacity=".6"/>
+            </linearGradient>
+            <linearGradient id="gFace" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#1b1c21"/><stop offset=".5" stop-color="#08080a"/><stop offset="1" stop-color="#121317"/>
+            </linearGradient>
+            <linearGradient id="gSheen" x1="0" y1="0" x2="1" y2="1">
+              <stop offset=".30" stop-color="#fff" stop-opacity="0"/><stop offset=".44" stop-color="#fff" stop-opacity=".13"/>
+              <stop offset=".50" stop-color="#fff" stop-opacity=".03"/><stop offset=".58" stop-color="#fff" stop-opacity=".09"/>
+              <stop offset=".70" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="gRing" cx=".35" cy=".3" r=".9">
+              <stop offset="0" stop-color="#c9ccd3"/><stop offset=".45" stop-color="#5a5d65"/><stop offset="1" stop-color="#1c1d21"/>
+            </radialGradient>
+            <radialGradient id="gGlass" cx=".4" cy=".35" r=".8">
+              <stop offset="0" stop-color="#3b4c6e"/><stop offset=".35" stop-color="#16203a"/><stop offset=".75" stop-color="#05070d"/><stop offset="1" stop-color="#000"/>
+            </radialGradient>
+            <radialGradient id="gLed" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#fff3d6"/><stop offset=".35" stop-color="#FFB04A"/><stop offset="1" stop-color="#FFB04A" stop-opacity="0"/>
+            </radialGradient>
+            <clipPath id="cFace"><rect x="26" y="26" width="248" height="408" rx="124"/></clipPath>
+          </defs>
+
+          <!-- dimensions -->
+          <path class="dim" d="M-46 0 H-66 M-56 0 V460 M-46 460 H-66"/>
+          <text class="dim-t" transform="translate(-72 262) rotate(-90)">46 MM</text>
+          <path class="dim" d="M0 496 V514 M0 505 H300 M300 496 V514" style="animation-delay:1.3s"/>
+          <text class="dim-t" x="150" y="530" text-anchor="middle">30 MM</text>
+          <path class="dim" d="M330 96 H372" style="animation-delay:1.5s"/>
+          <text class="dim-t" x="330" y="86">8 MM THIN</text>
+          <path class="dim" d="M330 376 H372" style="animation-delay:1.7s"/>
+          <text class="dim-t" x="330" y="366">RECORDING LIGHT</text>
+
+          <!-- side button -->
+          <rect x="296" y="196" width="12" height="76" rx="6" fill="#33353a"/>
+          <rect x="302" y="200" width="3" height="68" rx="1.5" fill="#7b7e86" opacity=".6"/>
+          <!-- body -->
+          <rect x="6" y="10" width="300" height="460" rx="150" fill="#0a0a0c" opacity=".85"/>
+          <rect x="0" y="0" width="300" height="460" rx="150" fill="url(#gFrame)"/>
+          <rect x="1.5" y="1.5" width="297" height="457" rx="148.5" fill="none" stroke="url(#gEdge)" stroke-width="3"/>
+          <rect x="22" y="22" width="256" height="416" rx="128" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="3"/>
+          <!-- glass face -->
+          <rect x="26" y="26" width="248" height="408" rx="124" fill="url(#gFace)"/>
+          <g clip-path="url(#cFace)"><rect class="sheen" x="-120" y="-80" width="560" height="640" fill="url(#gSheen)"/></g>
+          <rect x="26.5" y="26.5" width="247" height="407" rx="123.5" fill="none" stroke="#fff" stroke-opacity=".08"/>
+          <!-- lens -->
+          <circle cx="150" cy="112" r="58" fill="#000" opacity=".5"/>
+          <circle cx="150" cy="108" r="55" fill="url(#gRing)"/>
+          <circle cx="150" cy="108" r="55" fill="none" stroke="#fff" stroke-opacity=".28"/>
+          <circle cx="150" cy="108" r="40" fill="#050506"/>
+          <circle cx="150" cy="108" r="33" fill="url(#gGlass)"/>
+          <circle cx="150" cy="108" r="24" fill="none" stroke="#5f79b8" stroke-opacity=".28" stroke-width="1.5"/>
+          <circle cx="150" cy="108" r="14" fill="#020204"/>
+          <circle cx="150" cy="108" r="14" fill="none" stroke="#8aa2dc" stroke-opacity=".22"/>
+          <g class="glint">
+            <ellipse cx="138" cy="94" rx="9" ry="5" fill="#fff" opacity=".55" transform="rotate(-32 138 94)"/>
+            <circle cx="162" cy="121" r="2.6" fill="#fff" opacity=".4"/>
+          </g>
+          <!-- LED -->
+          <circle cx="150" cy="376" r="4" fill="#2a2118"/>
+          <g class="led"><circle cx="150" cy="376" r="20" fill="url(#gLed)"/><circle cx="150" cy="376" r="3.6" fill="#ffe6b8"/></g>
+        </svg>
+      </div></div>
+    </div>
+  </div>
+  <div class="cue mono"><i></i>Scroll</div>
+</section>
+
+<!-- ============ 02 WHAT YOU GET ============ -->
+<section class="fold" id="brief">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="mono" style="color:rgba(17,18,21,.5);margin-bottom:20px">What you get</p>
+        <h2>Every meeting ends in <em>one page.</em></h2>
+      </div>
+      <p class="sub">Lapel is not a recorder. Its AI understands the meeting: who committed to what, what changed, and what is still open. Then it writes the page and files it on your calendar.</p>
+    </div>
+
+    <div class="gets">
+      <article><h3>Decisions</h3><p>Every decision in one line, in the words the room agreed on. No transcript to dig through.</p></article>
+      <article><h3>Owners and deadlines</h3><p>Who owes what, and by when. Each commitment is tied to the person who made it.</p></article>
+      <article><h3>Follow-ups, drafted</h3><p>A message to the room, written and waiting. Read it, change a word, send it on WhatsApp or email.</p></article>
+      <article><h3>Filed on your calendar</h3><p>Every meeting, with every note and detail, is added to its calendar event. Open Tuesday at 11 and the whole meeting is there.</p></article>
+      <article><h3>Open questions</h3><p>What was raised and left undecided, so it comes back to the table next time.</p></article>
+      <article><h3>Ask it later</h3><p>Search any past meeting in plain language. What did we agree with the Chennai distributor?</p></article>
+    </div>
+
+    <div class="see">
+      <div>
+        <p class="mono">Why it has a camera</p>
+        <h3>A recorder only hears. <em>Lapel also sees.</em></h3>
+        <p>Half of what gets decided in a room is never said aloud. It is drawn, shown or pointed at. The camera lets the AI read it, and Lapel stores it with the meeting.</p>
+        <div class="ask">
+          <p class="q"><span class="mono">You ask</span>What was the Q3 margin on that slide?</p>
+          <p class="a"><span class="mono">On your phone</span>18.4%, up from 16.9% in Q2. Slide 7, Tuesday&rsquo;s pricing review, 11:32 am.</p>
+          <p class="eg">Example. The figures are invented.</p>
+        </div>
+      </div>
+      <ul>
+        <li><b>The whiteboard</b><span>Saved before someone wipes it, and written into your notes.</span></li>
+        <li><b>The slide and the screen</b><span>The number everyone was looking at, stored so you can ask for it weeks later.</span></li>
+        <li><b>The site visit</b><span>The machine, the shelf, the sample in your hand. What you saw, next to what was said.</span></li>
+        <li><b>The paper on the table</b><span>The document or visiting card someone hands you, captured without stopping the meeting.</span></li>
+      </ul>
+    </div>
+
+    <ol class="flow">
+      <li><time>Before</time><b>Clip it on.</b><span>A magnet holds it. No needle, no mark on the suit.</span></li>
+      <li><time>During</time><b>Run your meeting.</b><span>Lapel follows the conversation and the wall. Its light stays on, so nobody is surprised.</span></li>
+      <li><time>After</time><b>Read one page.</b><span>In English, Hindi or Hinglish, the way the meeting was held.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 03 QUESTIONS ============ -->
+<section class="fold" id="qa">
+  <div class="wrap qa">
+    <div>
+      <p class="mono" style="color:rgba(17,18,21,.5);margin-bottom:20px">Questions</p>
+      <h2>What leaders <em>ask first.</em></h2>
+      <p class="sub">Straight answers on recording, privacy and the pilot.</p>
+    </div>
+    <div class="faq">
+      <details open><summary>Does everyone know they are being recorded?</summary><p>Yes. A light on the pin is on whenever Lapel is recording, and we ask you to tell the room. Lapel is not built for secret recording.</p></details>
+      <details><summary>What if my company does not allow recording?</summary><p>We give you a short policy note for your legal and IT teams. You choose which meetings Lapel joins.</p></details>
+      <details><summary>Does it recognise faces?</summary><p>No. Lapel knows who was in a meeting from your calendar and from what you tell it.</p></details>
+      <details><summary>Which calendars does it work with?</summary><p>The pilot starts with Google Calendar and Outlook. Tell us what you use when you apply.</p></details>
+      <details><summary>Which languages does it understand?</summary><p>English, Hindi and Hinglish.</p></details>
+      <details><summary>Does it work for online meetings?</summary><p>Lapel is built for in-person meetings, the ones other tools miss.</p></details>
+      <details><summary>How does it stay on my jacket?</summary><p>A magnetic clasp holds it through the fabric. There is no needle, so it leaves no mark.</p></details>
+      <details><summary>Is the pilot pin the final product?</summary><p>No. The pilot uses an early pin. The final pin is being designed, and pilot members get first claim on it.</p></details>
+      <details><summary>What happens to my data if I leave the pilot?</summary><p>We delete it when you ask, and confirm in writing.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 THE PILOT ============ -->
+<section class="fold" id="pilot">
+  <div class="wrap">
+    <div class="two" style="align-items:start">
+      <div>
+        <p class="mono" style="color:var(--amber);margin-bottom:20px">The founding pilot</p>
+        <h2>Ten seats. <em>By application.</em></h2>
+        <div class="seats" role="img" aria-label="Ten pilot seats">
+          <i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i>
+        </div>
+        <ul class="terms">
+          <li><span class="mono">Who</span><b>Founders, CEOs and CXOs</b></li>
+          <li><span class="mono">How long</span><b>Four weeks</b></li>
+          <li><span class="mono">Where</span><b>Delhi NCR</b></li>
+          <li><span class="mono">Fee</span><b>₹9,999. Full refund if it does not earn its place.</b></li>
+        </ul>
+        <div class="vows">
+          <p><span><b>You decide where it goes.</b> Lapel records only the meetings you wear it to.</span></p>
+          <p><span><b>No face recognition.</b> It learns who was present from your calendar and from you.</span></p>
+          <p><span><b>Delete on request.</b> Ask once and your data is removed, confirmed in writing.</span></p>
+          <p><span><b>First claim on the final pin.</b> The pilot unit is an early build, on loan.</span></p>
+        </div>
+      </div>
+
+      <form id="apply" novalidate>
+        <h3>Apply for a seat</h3>
+        <p class="hint">Tell us your role and your week. If there is a fit, the founder calls you within two working days.</p>
+        <div class="row">
+          <div class="field"><label for="f-name">Full name <b class="req" aria-hidden="true">*</b></label><input id="f-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="f-role">Company and role <b class="req" aria-hidden="true">*</b></label><input id="f-role" name="role" autocomplete="organization-title" required></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f-email">Work email <b class="req" aria-hidden="true">*</b></label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="f-phone">Phone or WhatsApp <b class="req" aria-hidden="true">*</b></label><input id="f-phone" name="phone" type="tel" autocomplete="tel" required></div>
+        </div>
+        <div class="field"><label for="f-meet">In-person meetings in a typical week (optional)</label>
+          <select id="f-meet" name="meetings">
+            <option value="">Choose one</option><option>0 to 5</option><option>6 to 10</option><option>11 to 20</option><option>More than 20</option>
+          </select>
+        </div>
+        <button class="btn" type="submit">Apply for the pilot</button>
+        <p class="hint" style="margin:0;font-size:12.5px"><b class="req" aria-hidden="true">*</b> Required</p>
+        <p id="notice" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <footer class="mono">
+      <span>lapel · Made in India</span><span>lapel.pro</span><span>Design target 30 × 46 × 8 mm · Graphite</span>
+    </footer>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  /* Paste your form endpoint (for example a Formspree URL) here to receive applications. */
+  var FORM_ENDPOINT = "https://formspree.io/f/mpppvlzr";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- pin: pointer tilt + scroll turn ---- */
+  var tilt = document.getElementById("tilt"), stage = document.getElementById("stage");
+  var tx = -14, ty = 7, cx = -14, cy = 7, px = 0, py = 0, sc = 0, raf = 0;
+  function frame(){
+    cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+    tilt.style.setProperty("--ry", (cx + sc * 46).toFixed(2) + "deg");
+    tilt.style.setProperty("--rx", (cy - sc * 8).toFixed(2) + "deg");
+    tilt.style.setProperty("--sx", (-cx * 5).toFixed(1) + "px");
+    tilt.style.setProperty("--sy", (cy * 5).toFixed(1) + "px");
+    raf = (Math.abs(tx - cx) > .02 || Math.abs(ty - cy) > .02) ? requestAnimationFrame(frame) : 0;
+  }
+  function kick(){ if(!raf) raf = requestAnimationFrame(frame); }
+  if(!reduce){
+    window.addEventListener("pointermove", function(e){
+      var r = stage.getBoundingClientRect();
+      px = (e.clientX - (r.left + r.width/2)) / window.innerWidth;
+      py = (e.clientY - (r.top + r.height/2)) / window.innerHeight;
+      tx = Math.max(-26, Math.min(26, px * 52)); ty = Math.max(-16, Math.min(16, -py * 30)); kick();
+    }, {passive:true});
+    window.addEventListener("scroll", function(){
+      var h = document.getElementById("pin").offsetHeight || 1;
+      sc = Math.max(0, Math.min(1, window.scrollY / h)); raf = 0; kick();
+    }, {passive:true});
+    setTimeout(function(){ tilt.style.animation = "none"; kick(); }, 1700);
+  }
+
+
+  /* ---- the pin in 3D: drag to turn ---- */
+  (function(){
+    var host = document.getElementById("three");
+    if(!window.THREE || !host) return;
+    var T = window.THREE, renderer;
+    try{ renderer = new T.WebGLRenderer({antialias:true, alpha:true}); }catch(err){ return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputEncoding = T.sRGBEncoding;
+    renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.35;
+    host.appendChild(renderer.domElement); stage.classList.add("is3d");
+
+    var scene = new T.Scene(), cam = new T.PerspectiveCamera(26, 1, .1, 100); cam.position.set(0, 0, 13.2);
+
+    /* studio reflections painted on a canvas */
+    var ec = document.createElement("canvas"); ec.width = 1024; ec.height = 512; var g = ec.getContext("2d");
+    var bg = g.createLinearGradient(0,0,0,512); bg.addColorStop(0,"#6a6e78"); bg.addColorStop(.5,"#23252b"); bg.addColorStop(1,"#0c0d10");
+    g.fillStyle = bg; g.fillRect(0,0,1024,512);
+    function soft(x,y,w,h,c){ var r = g.createRadialGradient(x,y,0,x,y,Math.max(w,h)); r.addColorStop(0,c); r.addColorStop(1,"rgba(0,0,0,0)");
+      g.save(); g.translate(x,y); g.scale(w/Math.max(w,h), h/Math.max(w,h)); g.translate(-x,-y); g.fillStyle = r; g.fillRect(x-600,y-600,1200,1200); g.restore(); }
+    soft(250,120,210,70,"rgba(255,255,255,.95)"); soft(760,90,150,50,"rgba(215,225,255,.8)");
+    soft(520,200,60,150,"rgba(255,255,255,.5)"); soft(930,300,80,40,"rgba(255,190,120,.45)"); soft(90,330,60,30,"rgba(160,180,255,.3)");
+    var eq = new T.CanvasTexture(ec); eq.mapping = T.EquirectangularReflectionMapping; eq.encoding = T.sRGBEncoding;
+    var pm = new T.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(eq).texture; pm.dispose();
+    var key = new T.DirectionalLight(0xffffff, .9); key.position.set(-3, 5, 6); scene.add(key);
+    scene.add(new T.AmbientLight(0x8890a0, .35)); var fill = new T.DirectionalLight(0xcfd6ff, .5); fill.position.set(5, -1, 4); scene.add(fill);
+
+    function pill(w, h){ var r = w/2, s = new T.Shape(), a = (h - w)/2;
+      s.moveTo(r, -a); s.lineTo(r, a); s.absarc(0, a, r, 0, Math.PI, false); s.lineTo(-r, -a); s.absarc(0, -a, r, Math.PI, Math.PI*2, false); return s; }
+
+    var pin = new T.Group(); scene.add(pin);
+    var W = 3.0, H = 4.6, D = .8;
+    var metal = new T.MeshStandardMaterial({color:0x7b7e87, metalness:1, roughness:.4, envMapIntensity:1.5});
+    /* one continuous skin: the rounded edge is swept around the outline with exact normals, so there are no facets or seams */
+    function solidPill(w, h, d, b){
+      var r = w/2, a = (h - w)/2, C = [], n = 56, i, j, k = 12, P = [], pos = [], nor = [], idx = [];
+      for(i = 0; i <= n; i++){ var t = Math.PI * i / n; C.push([Math.cos(t)*r, a + Math.sin(t)*r, Math.cos(t), Math.sin(t)]); }
+      for(i = 0; i <= n; i++){ var u = Math.PI + Math.PI * i / n; C.push([Math.cos(u)*r, -a + Math.sin(u)*r, Math.cos(u), Math.sin(u)]); }
+      for(j = 0; j <= k; j++){ var q = -Math.PI/2 + (Math.PI/2) * j / k; P.push([q, -(d/2 - b)]); }
+      for(j = 0; j <= k; j++){ var q2 = (Math.PI/2) * j / k; P.push([q2, d/2 - b]); }
+      var nc = C.length, np = P.length;
+      for(i = 0; i < nc; i++) for(j = 0; j < np; j++){
+        var c = C[i], cs = Math.cos(P[j][0]), sn = Math.sin(P[j][0]), off = -b + b*cs;
+        pos.push(c[0] + c[2]*off, c[1] + c[3]*off, P[j][1] + sn*b); nor.push(c[2]*cs, c[3]*cs, sn);
+      }
+      for(i = 0; i < nc; i++) for(j = 0; j < np - 1; j++){
+        var A = i*np + j, Bq = ((i + 1) % nc)*np + j, Cq = A + 1, Dq = Bq + 1; idx.push(A, Bq, Cq, Bq, Dq, Cq);
+      }
+      var geo = new T.BufferGeometry(); geo.setAttribute("position", new T.Float32BufferAttribute(pos, 3));
+      geo.setAttribute("normal", new T.Float32BufferAttribute(nor, 3)); geo.setIndex(idx);
+      var grp = new T.Group(); grp.add(new T.Mesh(geo, metal));
+      var cap = new T.ShapeGeometry(pill(w - 2*b, h - 2*b), 56);
+      var f = new T.Mesh(cap, metal); f.position.z = d/2; grp.add(f);
+      var bk = new T.Mesh(cap, metal); bk.rotation.y = Math.PI; bk.position.z = -d/2; grp.add(bk);
+      return grp;
+    }
+    pin.add(solidPill(W, H, D, .2));
+    var zf = D/2;
+
+    var gap = new T.Mesh(new T.ShapeGeometry(pill(W - .5, H - .5), 56), new T.MeshStandardMaterial({color:0x020203, metalness:.3, roughness:.8}));
+    gap.position.z = zf + .0015; pin.add(gap);
+    var glassM = new T.MeshPhysicalMaterial({color:0x050506, metalness:.1, roughness:.04, clearcoat:1, clearcoatRoughness:.03, reflectivity:1});
+    var face = new T.Mesh(new T.ShapeGeometry(pill(W - .56, H - .56), 56), glassM); face.position.z = zf + .003; pin.add(face);
+
+    /* lens */
+    var ly = 1.18, lens = new T.Group(); lens.position.set(0, ly, zf); pin.add(lens);
+    var ringM = new T.MeshStandardMaterial({color:0xaeb1b9, metalness:1, roughness:.22, side:T.DoubleSide});
+    var prof = [[.36,0],[.36,.10],[.40,.125],[.50,.125],[.545,.10],[.56,.02],[.56,0]].map(function(p){ return new T.Vector2(p[0], p[1]); });
+    var ring = new T.Mesh(new T.LatheGeometry(prof, 72), ringM); ring.rotation.x = Math.PI/2; lens.add(ring);
+    var well = new T.Mesh(new T.CircleGeometry(.365, 64), new T.MeshStandardMaterial({color:0x020203, metalness:.6, roughness:.5})); well.position.z = .03; lens.add(well);
+    var ic = document.createElement("canvas"); ic.width = ic.height = 256; var ig = ic.getContext("2d");
+    var ir = ig.createRadialGradient(118,112,6,128,128,128); ir.addColorStop(0,"#020203"); ir.addColorStop(.36,"#020203"); ir.addColorStop(.40,"#2a3d6e"); ir.addColorStop(.62,"#131d38"); ir.addColorStop(.86,"#05070d"); ir.addColorStop(1,"#000");
+    ig.fillStyle = ir; ig.beginPath(); ig.arc(128,128,128,0,7); ig.fill();
+    ig.strokeStyle = "rgba(140,165,225,.35)"; ig.lineWidth = 2; ig.beginPath(); ig.arc(128,128,86,0,7); ig.stroke(); ig.beginPath(); ig.arc(128,128,52,0,7); ig.stroke();
+    var it = new T.CanvasTexture(ic); it.encoding = T.sRGBEncoding;
+    var iris = new T.Mesh(new T.CircleGeometry(.31, 64), new T.MeshBasicMaterial({map:it})); iris.position.z = .045; lens.add(iris);
+    var dome = new T.Mesh(new T.SphereGeometry(.34, 48, 24, 0, Math.PI*2, 0, Math.PI/2),
+      new T.MeshPhysicalMaterial({color:0xffffff, metalness:0, roughness:0, transparent:true, opacity:.16, clearcoat:1, clearcoatRoughness:0, envMapIntensity:2.2}));
+    dome.rotation.x = Math.PI/2; dome.scale.z = .3; dome.position.z = .05; lens.add(dome);
+
+    /* recording light */
+    var led = new T.Mesh(new T.CircleGeometry(.045, 24), new T.MeshBasicMaterial({color:0xffd9a0, toneMapped:false})); led.position.set(0, -1.46, zf + .008); pin.add(led);
+    var gc = document.createElement("canvas"); gc.width = gc.height = 128; var gg = gc.getContext("2d");
+    var gr = gg.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0,"rgba(255,200,120,1)"); gr.addColorStop(.25,"rgba(255,176,74,.55)"); gr.addColorStop(1,"rgba(255,176,74,0)");
+    gg.fillStyle = gr; gg.fillRect(0,0,128,128);
+    var glow = new T.Mesh(new T.CircleGeometry(.36, 40), new T.MeshBasicMaterial({map:new T.CanvasTexture(gc), blending:T.AdditiveBlending, depthWrite:false, transparent:true, toneMapped:false}));
+    glow.position.set(0, -1.46, zf + .006); pin.add(glow);
+
+    /* side button, back clasp ring, charging contacts */
+    var btn = solidPill(.17, .7, .09, .045); btn.rotation.y = Math.PI/2; btn.position.set(W/2 - .012, .1, 0); pin.add(btn);
+    var dark = new T.MeshStandardMaterial({color:0x1b1c20, metalness:.9, roughness:.5});
+    var clasp = new T.Mesh(new T.RingGeometry(.82, .9, 64), dark); clasp.rotation.y = Math.PI; clasp.position.z = -zf - .002; pin.add(clasp);
+    var plate = new T.Mesh(new T.CircleGeometry(.6, 64), new T.MeshStandardMaterial({color:0x33353a, metalness:1, roughness:.25})); plate.rotation.y = Math.PI; plate.position.z = -zf - .002; pin.add(plate);
+    [-.25, .25].forEach(function(x){ var c = new T.Mesh(new T.CircleGeometry(.09, 24), new T.MeshStandardMaterial({color:0xc9a66b, metalness:1, roughness:.3})); c.rotation.y = Math.PI; c.position.set(x, -1.55, -zf - .002); pin.add(c); });
+
+    /* interaction */
+    var ry = -2.6, rx = .5, vy = 0, vx = 0, restY = -.3, restX = .14, down = false, lx = 0, ly2 = 0, touched = false, t0 = performance.now(), seen = true;
+    var el = renderer.domElement, grab = document.getElementById("grab");
+    el.addEventListener("pointerdown", function(e){ down = true; lx = e.clientX; ly2 = e.clientY; el.setPointerCapture(e.pointerId); touched = true; if(grab) grab.classList.add("used"); });
+    el.addEventListener("pointermove", function(e){ if(!down) return; vy = (e.clientX - lx) * .011; vx = (e.clientY - ly2) * .008; ry += vy; rx += vx; lx = e.clientX; ly2 = e.clientY; });
+    function up(){ down = false; } el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+    el.addEventListener("keydown", function(e){ if(e.key === "ArrowLeft"){ ry -= .25; touched = true; } if(e.key === "ArrowRight"){ ry += .25; touched = true; } });
+    el.tabIndex = 0; el.setAttribute("aria-label", "Lapel pin, 3D view. Drag or use the arrow keys to turn it.");
+
+    function size(){ var w = host.clientWidth, h = host.clientHeight; if(!w || !h) return; renderer.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix(); }
+    size(); window.addEventListener("resize", size);
+    if("IntersectionObserver" in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; }).observe(host);
+
+    function loop(now){
+      requestAnimationFrame(loop); if(!seen) return;
+      var t = (now - t0) / 1000;
+      if(!down){
+        if(!touched){ ry += (restY + (reduce ? 0 : Math.sin(t * .6) * .22) - ry) * .045; rx += (restX + (reduce ? 0 : Math.sin(t * .45) * .05) - rx) * .045; }
+        else { ry += vy; rx += vx; vy *= .94; vx *= .9; rx += (restX - rx) * .02; }
+      }
+      rx = Math.max(-1.1, Math.min(1.1, rx));
+      pin.rotation.set(rx, ry, 0); pin.position.y = reduce ? 0 : Math.sin(t * .9) * .06;
+      glow.material.opacity = reduce ? 1 : .7 + Math.sin(t * 2.4) * .3;
+      renderer.render(scene, cam);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+  /* ---- fold rail ---- */
+  var links = [].slice.call(document.querySelectorAll(".rail a"));
+  var folds = ["pin","brief","qa","pilot"].map(function(id){ return document.getElementById(id); });
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ var i = folds.indexOf(e.target);
+        links.forEach(function(l, j){ l.classList.toggle("on", i === j); }); } });
+    }, {rootMargin:"-45% 0px -45% 0px"});
+    folds.forEach(function(f){ io.observe(f); });
+  }
+
+  /* ---- application form ---- */
+  var form = document.getElementById("apply"), notice = document.getElementById("notice");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var bad = null, emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    [].forEach.call(form.elements, function(el){
+      if(!el.name || !el.required) return;
+      var v = el.value.trim(), ok = v !== "" && (el.type !== "email" || emailRe.test(v)) && (el.type !== "tel" || v.replace(/\D/g, "").length >= 8);
+      el.setAttribute("aria-invalid", ok ? "false" : "true"); if(!ok && !bad) bad = el;
+    });
+    if(bad){
+      notice.className = "err";
+      notice.textContent = bad.type === "email" && bad.value.trim() ? "That email address looks incomplete. Check it and try again."
+        : bad.type === "tel" && bad.value.trim() ? "That phone number looks too short. Include the full number."
+        : "Please fill in your " + form.querySelector('label[for="' + bad.id + '"]').textContent.replace("*", "").trim().toLowerCase() + ".";
+      bad.focus(); return;
+    }
+    if(!FORM_ENDPOINT){
+      notice.className = "err";
+      notice.textContent = "This page is a preview and the form is not connected yet, so nothing was sent.";
+      return;
+    }
+    notice.className = ""; notice.textContent = "Sending your application…";
+    fetch(FORM_ENDPOINT, {method:"POST", headers:{"Accept":"application/json"}, body:new FormData(form)})
+      .then(function(r){ if(!r.ok) throw 0; form.reset(); notice.className = "ok";
+        notice.textContent = "Thank you. We read every application ourselves. You will hear from us within two working days."; })
+      .catch(function(){ notice.className = "err";
+        notice.textContent = /claude/.test(location.hostname) ? "This preview cannot send forms. The form will work once the page is live on lapel.pro."
+          : "We could not send your application. Check your connection and try again."; });
+  });
+})();
+</script>
+</body>
+</html>
