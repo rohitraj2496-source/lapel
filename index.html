@@ -239,6 +239,33 @@ input:focus,select:focus{outline:0;border-bottom-color:var(--amber)}
 input[aria-invalid="true"],select[aria-invalid="true"]{border-bottom-color:#ff8f7a}
 form .btn{justify-self:start;margin-top:6px}
 .req{color:var(--amber);font-weight:600}
+.dpn{font-size:12.5px;line-height:1.55;color:rgba(236,230,218,.66);display:grid;gap:6px;border-top:1px solid rgba(236,230,218,.14);padding-top:14px}
+.dpn b{color:var(--bone);font-weight:600}
+.dpn a,.consent a,footer a{color:var(--bone);text-underline-offset:3px}
+.nowrap{white-space:nowrap}
+.consent{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;font-family:var(--body);font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--bone);line-height:1.45;cursor:pointer}
+.consent input{width:18px;height:18px;margin:1px 0 0;padding:0;accent-color:var(--amber);border:0;cursor:pointer}
+.consent input[aria-invalid="true"]{outline:2px solid #ff8f7a;outline-offset:2px}
+.legal{position:fixed;inset:0;z-index:100;background:var(--paper);color:var(--ink);overflow-y:auto;padding:clamp(64px,10vh,96px) var(--gutter) 80px;animation:fade .35s var(--ease) both}
+.legal[hidden]{display:none}
+.legal article{max-width:720px;margin:0 auto}
+.legal .close{position:fixed;top:18px;right:var(--gutter);font:500 11.5px var(--body);letter-spacing:.13em;text-transform:uppercase;color:var(--ink);background:var(--paper);border:1px solid rgba(17,18,21,.25);border-radius:99px;padding:10px 18px;cursor:pointer;text-decoration:none}
+.legal .close:hover{background:var(--ink);color:var(--paper)}
+.legal .kicker{font-size:11.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:rgba(17,18,21,.5)}
+.legal h2{font-size:clamp(30px,3.6vw,44px);font-weight:500;letter-spacing:-.03em;line-height:1.06;margin:12px 0 10px}
+.legal .lead{font-size:16.5px;color:rgba(17,18,21,.72);margin-bottom:28px}
+.legal h3{font-size:17px;font-weight:600;letter-spacing:-.01em;margin:30px 0 8px;padding-top:22px;border-top:1px solid rgba(17,18,21,.14)}
+.legal p,.legal li{font-size:15.5px;line-height:1.65;color:rgba(17,18,21,.78)}
+.legal p+p{margin-top:10px}
+.legal ul{margin:8px 0 0 20px;display:grid;gap:5px}
+.legal table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px}
+.legal th,.legal td{text-align:left;vertical-align:top;padding:10px 12px 10px 0;border-top:1px solid rgba(17,18,21,.12);line-height:1.5}
+.legal th{font-weight:600;color:var(--ink);width:34%}
+.legal td{color:rgba(17,18,21,.75)}
+.legal .fill{background:rgba(255,176,74,.28);padding:0 4px;border-radius:3px}
+.legal a{color:var(--ink);text-underline-offset:3px}
+.legal .tw{overflow-x:auto}
+body.legal-open{overflow:hidden}
 #notice{font-size:14.5px;line-height:1.5;min-height:1.5em}
 #notice.err{color:#ffb3a3}
 #notice.ok{color:var(--amber)}
@@ -516,6 +543,14 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
             <option value="">Choose one</option><option>0 to 5</option><option>6 to 10</option><option>11 to 20</option><option>More than 20</option>
           </select>
         </div>
+        <div class="dpn" id="dpn">
+          <p><b>How we use these details.</b> We use your name, company and role, work email, phone and meeting count only to review your application and contact you about the pilot. Applications reach us through Formspree, a form service based in the US. We keep them for up to 12 months, or less if you ask.</p>
+          <p>You can withdraw consent, or ask us to correct or delete your details, at any time by writing to <span class="nowrap">privacy@lapel.pro</span>. You can also complain to the Data Protection Board of India. <a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a></p>
+        </div>
+        <label class="consent" for="f-consent">
+          <input id="f-consent" name="consent" type="checkbox" value="Yes, agreed to the Privacy Policy (version of 11 November 2026)" required aria-describedby="dpn">
+          <span>I agree to Lapel using my details for this purpose, as set out in the <a href="#privacy">Privacy Policy</a>. <b class="req" aria-hidden="true">*</b></span>
+        </label>
         <button class="btn" type="submit">Apply for the pilot</button>
         <p class="hint" style="margin:0;font-size:12.5px"><b class="req" aria-hidden="true">*</b> Required</p>
         <p id="notice" role="status" aria-live="polite"></p>
@@ -523,10 +558,106 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     </div>
 
     <footer class="mono">
-      <span>lapel · Made in India</span><span>lapel.pro</span><span>Founding pilot · Delhi NCR</span>
+      <span>lapel · Made in India</span><span><a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a></span><span>privacy@lapel.pro</span>
     </footer>
   </div>
 </section>
+
+<div class="legal" id="privacy" role="dialog" aria-modal="true" aria-labelledby="privacy-h" hidden>
+  <a class="close" href="#pilot">Close</a>
+  <article>
+    <p class="kicker">Last updated 11 November 2026</p>
+    <h2 id="privacy-h">Privacy Policy</h2>
+    <p class="lead">Lapel is a pin that sees and hears meetings, so how we handle personal data is part of the product. This policy covers this website, applications to the founding pilot, and the pin and app used during the pilot.</p>
+
+    <h3>Who we are</h3>
+    <p>Lapel is operated by <span class="fill">[legal name of the operator]</span>, <span class="fill">[registered address]</span>, India. For this policy we are the Data Fiduciary under India&rsquo;s Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025.</p>
+    <p>Questions, requests and grievances: <b>privacy@lapel.pro</b>.</p>
+
+    <h3>1. When you apply on this website</h3>
+    <div class="tw"><table>
+      <tr><th>What we collect</th><td>Full name, company and role, work email, phone or WhatsApp number, and, if you choose, how many in-person meetings you have in a typical week. We also record that you ticked the consent box, and when.</td></tr>
+      <tr><th>Why</th><td>To review your application, decide whether the pilot fits you, and contact you about it. Nothing else.</td></tr>
+      <tr><th>Basis</th><td>Your consent, given by ticking the box on the form.</td></tr>
+      <tr><th>Who handles it</th><td>Formspree, a form service based in the United States, receives the form and passes it to us. Only the founding team can see applications.</td></tr>
+      <tr><th>How long we keep it</th><td>Up to 12 months after you apply, then we delete it. If you join the pilot, section 2 applies.</td></tr>
+    </table></div>
+    <p>This site uses no advertising or analytics cookies. To display the page, your browser loads fonts from Google Fonts and code from cdnjs, and those services see your IP address as part of delivering them.</p>
+
+    <h3>2. If you join the pilot</h3>
+    <div class="tw"><table>
+      <tr><th>What the pin captures</th><td>Audio, and still images of what is in front of you (such as a whiteboard, a slide, a screen or a document), only during the meetings you choose to wear it in. A light on the pin is on whenever it is capturing.</td></tr>
+      <tr><th>What we create from it</th><td>Transcripts, meeting briefs (decisions, owners, deadlines, open questions), drafted follow-up messages, and a searchable record so you can ask about past meetings.</td></tr>
+      <tr><th>Calendar</th><td>With your permission, we read the titles, times and invitees of your meetings to match each one to a brief, and we add the brief to that calendar event. You can remove this permission at any time.</td></tr>
+      <tr><th>Why</th><td>To provide the pilot service to you, fix problems with it, and learn whether it is useful.</td></tr>
+      <tr><th>Who handles it</th><td>Cloud hosting, speech-to-text and AI model providers process meeting data on our behalf, under contract. We will list them by name before your pilot starts. Some may process data outside India, which the law allows except in countries the Government restricts.</td></tr>
+      <tr><th>How long we keep it</th><td>For the length of the pilot and 30 days after it ends, unless you ask us to keep it longer or delete it sooner.</td></tr>
+    </table></div>
+    <p><b>What we do not do.</b> We do not use face recognition. We do not sell personal data or use it for advertising. We do not use your meeting content to train AI models.</p>
+
+    <h3>3. People in your meetings</h3>
+    <p>The people you meet are not our users, but the pin captures their words and, sometimes, their image. We ask every pilot member to:</p>
+    <ul>
+      <li>tell the people in the room that Lapel is on, using the short notice we provide;</li>
+      <li>switch it off if anyone objects, and follow their own company&rsquo;s recording policy;</li>
+      <li>never use Lapel covertly, or where recording is not allowed.</li>
+    </ul>
+    <p>Anyone who appears in a Lapel recording can write to privacy@lapel.pro to ask us to delete the parts that relate to them.</p>
+
+    <h3>4. Your rights</h3>
+    <p>Under the DPDP Act you can:</p>
+    <ul>
+      <li>withdraw your consent at any time, as easily as you gave it. Write to privacy@lapel.pro. Withdrawal stops further processing; it does not affect what was done before;</li>
+      <li>ask for a summary of the personal data we hold about you and how we use it;</li>
+      <li>ask us to correct, complete, update or erase your personal data;</li>
+      <li>nominate someone to exercise these rights for you if you die or are unable to;</li>
+      <li>raise a grievance with us, and, if you are not satisfied with our answer, complain to the Data Protection Board of India.</li>
+    </ul>
+    <p>We reply to every request within 7 working days and confirm deletions in writing.</p>
+
+    <h3>5. Security</h3>
+    <p>We use reasonable security safeguards, including encryption of data in transit and access limited to the people who need it. If a personal data breach affects you, we will tell you and the Data Protection Board as the law requires.</p>
+
+    <h3>6. Children</h3>
+    <p>Lapel is for working professionals. We do not knowingly collect personal data from anyone under 18.</p>
+
+    <h3>7. Changes</h3>
+    <p>If we change this policy, we will update the date at the top. If a change affects how we use data you have already given us, we will tell you and ask again where the law requires.</p>
+  </article>
+</div>
+
+<div class="legal" id="terms" role="dialog" aria-modal="true" aria-labelledby="terms-h" hidden>
+  <a class="close" href="#pilot">Close</a>
+  <article>
+    <p class="kicker">Last updated 11 November 2026</p>
+    <h2 id="terms-h">Pilot Terms</h2>
+    <p class="lead">These terms apply to the Lapel founding pilot. They sit alongside our <a href="#privacy">Privacy Policy</a>.</p>
+
+    <h3>1. The pilot</h3>
+    <p>The founding pilot runs for four weeks, in Delhi NCR, for up to ten participants chosen by application. Applying does not guarantee a place.</p>
+
+    <h3>2. Fee and refund</h3>
+    <p>The pilot fee is &#8377;9,999. If you tell us before the pilot ends, or within 7 days after it ends, that Lapel did not earn its place, we refund the full fee. No reason is needed.</p>
+
+    <h3>3. The pin</h3>
+    <p>The pin is an early prototype, lent to you for the pilot. It belongs to us and is to be returned when the pilot ends. As a prototype it may be bulkier than the final design, need charging often, or fail. It is provided as is, without warranties.</p>
+
+    <h3>4. Using Lapel lawfully</h3>
+    <p>You are responsible for how you use the pin. You agree to tell the people in your meetings that Lapel is on, switch it off if anyone objects, follow your employer&rsquo;s policies and the law, and never use it covertly or where recording is not allowed.</p>
+
+    <h3>5. Your content</h3>
+    <p>Your recordings, transcripts and briefs belong to you. You allow us to process them only to provide the pilot to you, as described in the Privacy Policy.</p>
+
+    <h3>6. Liability</h3>
+    <p>To the extent the law allows, our total liability to you for the pilot is limited to the fee you paid.</p>
+
+    <h3>7. Law</h3>
+    <p>These terms are governed by the laws of India. Courts in New Delhi have jurisdiction.</p>
+
+    <h3>8. Contact</h3>
+    <p><b>privacy@lapel.pro</b></p>
+  </article>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -707,6 +838,23 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     folds.forEach(function(f){ io.observe(f); });
   }
 
+  /* ---- privacy policy and terms ---- */
+  (function(){
+    var panes = {privacy: document.getElementById("privacy"), terms: document.getElementById("terms")};
+    function route(){
+      var id = location.hash.replace("#", ""), open = false;
+      Object.keys(panes).forEach(function(k){
+        var show = k === id; panes[k].hidden = !show;
+        if(show){ open = true; panes[k].scrollTop = 0; var c = panes[k].querySelector(".close"); if(c) c.focus({preventScroll:true}); }
+      });
+      document.body.classList.toggle("legal-open", open);
+    }
+    window.addEventListener("hashchange", route); route();
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && document.body.classList.contains("legal-open")) location.hash = "pilot";
+    });
+  })();
+
   /* ---- application form ---- */
   var form = document.getElementById("apply"), notice = document.getElementById("notice");
   form.addEventListener("submit", function(e){
@@ -714,12 +862,13 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     var bad = null, emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     [].forEach.call(form.elements, function(el){
       if(!el.name || !el.required) return;
-      var v = el.value.trim(), ok = v !== "" && (el.type !== "email" || emailRe.test(v)) && (el.type !== "tel" || v.replace(/\D/g, "").length >= 8);
+      var v = el.value.trim(), ok = el.type === "checkbox" ? el.checked
+        : v !== "" && (el.type !== "email" || emailRe.test(v)) && (el.type !== "tel" || v.replace(/\D/g, "").length >= 8);
       el.setAttribute("aria-invalid", ok ? "false" : "true"); if(!ok && !bad) bad = el;
     });
     if(bad){
       notice.className = "err";
-      notice.textContent = bad.type === "email" && bad.value.trim() ? "That email address looks incomplete. Check it and try again."
+      notice.textContent = bad.type === "checkbox" ? "Please tick the consent box so we can review your application." : bad.type === "email" && bad.value.trim() ? "That email address looks incomplete. Check it and try again."
         : bad.type === "tel" && bad.value.trim() ? "That phone number looks too short. Include the full number."
         : "Please fill in your " + form.querySelector('label[for="' + bad.id + '"]').textContent.replace("*", "").trim().toLowerCase() + ".";
       bad.focus(); return;
