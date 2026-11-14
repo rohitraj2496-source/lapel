@@ -243,6 +243,7 @@ form .btn{justify-self:start;margin-top:6px}
 .dpn b{color:var(--bone);font-weight:600}
 .dpn a,.consent a,footer a{color:var(--bone);text-underline-offset:3px}
 .nowrap{white-space:nowrap}
+footer .contact a{text-transform:none;letter-spacing:.02em}
 .consent{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;font-family:var(--body);font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--bone);line-height:1.45;cursor:pointer}
 .consent input{width:18px;height:18px;margin:1px 0 0;padding:0;accent-color:var(--amber);border:0;cursor:pointer}
 .consent input[aria-invalid="true"]{outline:2px solid #ff8f7a;outline-offset:2px}
@@ -266,6 +267,14 @@ form .btn{justify-self:start;margin-top:6px}
 .legal a{color:var(--ink);text-underline-offset:3px}
 .legal .tw{overflow-x:auto}
 body.legal-open{overflow:hidden}
+.cookie{position:fixed;left:0;right:0;margin:0 auto;bottom:18px;z-index:90;width:min(640px,calc(100% - 32px));display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:rgba(17,18,21,.92);color:var(--bone);border:1px solid rgba(236,230,218,.18);border-radius:16px;padding:14px 16px 14px 20px;backdrop-filter:blur(10px);box-shadow:0 20px 40px -20px rgba(0,0,0,.7);font-size:14px;line-height:1.45;animation:fade .5s var(--ease) both}
+.cookie[hidden]{display:none}
+.cookie p{flex:1 1 280px}
+.cookie a{color:var(--bone);text-underline-offset:3px}
+.cookie-actions{display:flex;gap:8px}
+.cbtn{font:500 14px var(--body);border-radius:99px;padding:9px 18px;cursor:pointer;border:1px solid var(--bone);background:var(--bone);color:var(--ink)}
+.cbtn.ghost{background:transparent;color:var(--bone);border-color:rgba(236,230,218,.4)}
+.linkbtn{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--bone);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 #notice{font-size:14.5px;line-height:1.5;min-height:1.5em}
 #notice.err{color:#ffb3a3}
 #notice.ok{color:var(--amber)}
@@ -529,7 +538,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
 
       <form id="apply" novalidate>
         <h3>Apply for a seat</h3>
-        <p class="hint">Tell us your role and your week. If there is a fit, the founder calls you within two working days.</p>
+        <p class="hint">Tell us your role and your week. If there is a fit, the founder calls you within two working days. Questions first? Write to <a href="mailto:rohit@lapel.pro" style="color:var(--bone);text-underline-offset:3px">rohit@lapel.pro</a>.</p>
         <div class="row">
           <div class="field"><label for="f-name">Full name <b class="req" aria-hidden="true">*</b></label><input id="f-name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="f-role">Company and role <b class="req" aria-hidden="true">*</b></label><input id="f-role" name="role" autocomplete="organization-title" required></div>
@@ -545,7 +554,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
         </div>
         <div class="dpn" id="dpn">
           <p><b>How we use these details.</b> We use your name, company and role, work email, phone and meeting count only to review your application and contact you about the pilot. Applications reach us through Formspree, a form service based in the US. We keep them for up to 12 months, or less if you ask.</p>
-          <p>You can withdraw consent, or ask us to correct or delete your details, at any time by writing to <span class="nowrap">privacy@lapel.pro</span>. You can also complain to the Data Protection Board of India. <a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a></p>
+          <p>You can withdraw consent, or ask us to correct or delete your details, at any time by writing to <span class="nowrap">rohit@lapel.pro</span>. You can also complain to the Data Protection Board of India. <a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a></p>
         </div>
         <label class="consent" for="f-consent">
           <input id="f-consent" name="consent" type="checkbox" value="Yes, agreed to the Privacy Policy (version of 11 November 2026)" required aria-describedby="dpn">
@@ -558,10 +567,18 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     </div>
 
     <footer class="mono">
-      <span>lapel · Made in India</span><span><a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a></span><span>privacy@lapel.pro</span>
+      <span>lapel · Made in India</span><span><a href="#privacy">Privacy Policy</a> · <a href="#terms">Pilot Terms</a> · <button type="button" class="linkbtn" id="cookie-settings">Cookie settings</button></span><span class="contact">Contact: <a href="mailto:rohit@lapel.pro">rohit@lapel.pro</a> · WhatsApp <a href="https://wa.me/917011468325" target="_blank" rel="noopener">+91 70114 68325</a></span>
     </footer>
   </div>
 </section>
+
+<div class="cookie" id="cookie" role="region" aria-label="Cookie notice" hidden>
+  <p>We use Google Analytics cookies to see how people find and use this page, only if you accept. <a href="#privacy">Privacy Policy</a></p>
+  <div class="cookie-actions">
+    <button type="button" class="cbtn ghost" id="cookie-no">Decline</button>
+    <button type="button" class="cbtn" id="cookie-yes">Accept</button>
+  </div>
+</div>
 
 <div class="legal" id="privacy" role="dialog" aria-modal="true" aria-labelledby="privacy-h" hidden>
   <a class="close" href="#pilot">Close</a>
@@ -572,7 +589,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
 
     <h3>Who we are</h3>
     <p>Lapel is operated by <span class="fill">[legal name of the operator]</span>, <span class="fill">[registered address]</span>, India. For this policy we are the Data Fiduciary under India&rsquo;s Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025.</p>
-    <p>Questions, requests and grievances: <b>privacy@lapel.pro</b>.</p>
+    <p>Questions, requests and grievances: <b><a href="mailto:rohit@lapel.pro">rohit@lapel.pro</a></b>.</p>
 
     <h3>1. When you apply on this website</h3>
     <div class="tw"><table>
@@ -582,7 +599,8 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
       <tr><th>Who handles it</th><td>Formspree, a form service based in the United States, receives the form and passes it to us. Only the founding team can see applications.</td></tr>
       <tr><th>How long we keep it</th><td>Up to 12 months after you apply, then we delete it. If you join the pilot, section 2 applies.</td></tr>
     </table></div>
-    <p>This site uses no advertising or analytics cookies. To display the page, your browser loads fonts from Google Fonts and code from cdnjs, and those services see your IP address as part of delivering them.</p>
+    <p><b>Analytics.</b> If you click Accept on the cookie notice, we use Google Analytics to count visits and see how people find and use this page. It sets cookies and sends Google details such as your device, browser, approximate location and the pages you view. We use it only to improve the site, and we do not use advertising cookies. If you click Decline, Google Analytics does not load. You can change your choice at any time with Cookie settings at the bottom of the page.</p>
+    <p>To display the page, your browser also loads fonts from Google Fonts and code from cdnjs, and those services see your IP address as part of delivering them.</p>
 
     <h3>2. If you join the pilot</h3>
     <div class="tw"><table>
@@ -602,12 +620,12 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
       <li>switch it off if anyone objects, and follow their own company&rsquo;s recording policy;</li>
       <li>never use Lapel covertly, or where recording is not allowed.</li>
     </ul>
-    <p>Anyone who appears in a Lapel recording can write to privacy@lapel.pro to ask us to delete the parts that relate to them.</p>
+    <p>Anyone who appears in a Lapel recording can write to rohit@lapel.pro to ask us to delete the parts that relate to them.</p>
 
     <h3>4. Your rights</h3>
     <p>Under the DPDP Act you can:</p>
     <ul>
-      <li>withdraw your consent at any time, as easily as you gave it. Write to privacy@lapel.pro. Withdrawal stops further processing; it does not affect what was done before;</li>
+      <li>withdraw your consent at any time, as easily as you gave it. Write to rohit@lapel.pro. Withdrawal stops further processing; it does not affect what was done before;</li>
       <li>ask for a summary of the personal data we hold about you and how we use it;</li>
       <li>ask us to correct, complete, update or erase your personal data;</li>
       <li>nominate someone to exercise these rights for you if you die or are unable to;</li>
@@ -655,7 +673,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     <p>These terms are governed by the laws of India. Courts in New Delhi have jurisdiction.</p>
 
     <h3>8. Contact</h3>
-    <p><b>privacy@lapel.pro</b></p>
+    <p><b>rohit@lapel.pro</b></p>
   </article>
 </div>
 
@@ -853,6 +871,30 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     document.addEventListener("keydown", function(e){
       if(e.key === "Escape" && document.body.classList.contains("legal-open")) location.hash = "pilot";
     });
+  })();
+
+  /* ---- analytics, only after consent ---- */
+  (function(){
+    var GA_ID = "G-M2PJDRMN6S", KEY = "lapel-analytics-consent", loaded = false;
+    var box = document.getElementById("cookie");
+    function get(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+    function set(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
+    function load(){
+      if(loaded || /claude/.test(location.hostname)) return; loaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      gtag("js", new Date()); gtag("config", GA_ID);
+      var sc = document.createElement("script"); sc.async = true;
+      sc.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID; document.head.appendChild(sc);
+    }
+    var choice = get();
+    if(choice === "yes") load(); else if(choice !== "no") box.hidden = false;
+    document.getElementById("cookie-yes").addEventListener("click", function(){ set("yes"); box.hidden = true; load(); });
+    document.getElementById("cookie-no").addEventListener("click", function(){
+      set("no"); box.hidden = true;
+      if(loaded){ window["ga-disable-" + GA_ID] = true; }
+    });
+    document.getElementById("cookie-settings").addEventListener("click", function(){ box.hidden = false; });
   })();
 
   /* ---- application form ---- */
