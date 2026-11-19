@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lapel.pro</title>
 <meta name="description" content="Lapel is a smart AI pin for CXOs and senior leaders. It sees and hears your in-person meetings and files decisions, owners and follow-ups on your calendar. Founding pilot open to 10 leaders in Delhi NCR.">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M2PJDRMN6S"></script>
+<script>
+  try { if (localStorage.getItem("lapel-analytics-consent") === "no") { window["ga-disable-G-M2PJDRMN6S"] = true; } } catch (e) {}
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag("js", new Date());
+  gtag("config", "G-M2PJDRMN6S");
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -573,10 +582,10 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
 </section>
 
 <div class="cookie" id="cookie" role="region" aria-label="Cookie notice" hidden>
-  <p>We use Google Analytics cookies to see how people find and use this page, only if you accept. <a href="#privacy">Privacy Policy</a></p>
+  <p>We use Google Analytics cookies to see how people find and use this page. You can opt out at any time. <a href="#privacy">Privacy Policy</a></p>
   <div class="cookie-actions">
-    <button type="button" class="cbtn ghost" id="cookie-no">Decline</button>
-    <button type="button" class="cbtn" id="cookie-yes">Accept</button>
+    <button type="button" class="cbtn ghost" id="cookie-no">Opt out</button>
+    <button type="button" class="cbtn" id="cookie-yes">OK</button>
   </div>
 </div>
 
@@ -599,7 +608,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
       <tr><th>Who handles it</th><td>Formspree, a form service based in the United States, receives the form and passes it to us. Only the founding team can see applications.</td></tr>
       <tr><th>How long we keep it</th><td>Up to 12 months after you apply, then we delete it. If you join the pilot, section 2 applies.</td></tr>
     </table></div>
-    <p><b>Analytics.</b> If you click Accept on the cookie notice, we use Google Analytics to count visits and see how people find and use this page. It sets cookies and sends Google details such as your device, browser, approximate location and the pages you view. We use it only to improve the site, and we do not use advertising cookies. If you click Decline, Google Analytics does not load. You can change your choice at any time with Cookie settings at the bottom of the page.</p>
+    <p><b>Analytics.</b> We use Google Analytics to count visits and see how people find and use this page. It loads when you open the page, sets cookies, and sends Google details such as your device, browser, approximate location and the pages you view. We use it only to improve the site, and we do not use advertising cookies. You can opt out at any time with Cookie settings at the bottom of the page; after that, Google Analytics stops collecting data from your browser.</p>
     <p>To display the page, your browser also loads fonts from Google Fonts and code from cdnjs, and those services see your IP address as part of delivering them.</p>
 
     <h3>2. If you join the pilot</h3>
@@ -873,26 +882,19 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;m
     });
   })();
 
-  /* ---- analytics, only after consent ---- */
+  /* ---- analytics notice and opt-out (the Google tag in <head> loads on landing) ---- */
   (function(){
-    var GA_ID = "G-M2PJDRMN6S", KEY = "lapel-analytics-consent", loaded = false;
+    var GA_ID = "G-M2PJDRMN6S", KEY = "lapel-analytics-consent";
     var box = document.getElementById("cookie");
     function get(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
     function set(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
-    function load(){
-      if(loaded || /claude/.test(location.hostname)) return; loaded = true;
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function(){ window.dataLayer.push(arguments); };
-      gtag("js", new Date()); gtag("config", GA_ID);
-      var sc = document.createElement("script"); sc.async = true;
-      sc.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID; document.head.appendChild(sc);
-    }
-    var choice = get();
-    if(choice === "yes") load(); else if(choice !== "no") box.hidden = false;
-    document.getElementById("cookie-yes").addEventListener("click", function(){ set("yes"); box.hidden = true; load(); });
+    if(!get()) box.hidden = false;
+    document.getElementById("cookie-yes").addEventListener("click", function(){
+      set("yes"); box.hidden = true;
+      if(window["ga-disable-" + GA_ID]){ window["ga-disable-" + GA_ID] = false; if(window.gtag) gtag("config", GA_ID); }
+    });
     document.getElementById("cookie-no").addEventListener("click", function(){
-      set("no"); box.hidden = true;
-      if(loaded){ window["ga-disable-" + GA_ID] = true; }
+      set("no"); box.hidden = true; window["ga-disable-" + GA_ID] = true;
     });
     document.getElementById("cookie-settings").addEventListener("click", function(){ box.hidden = false; });
   })();
